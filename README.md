@@ -17,7 +17,7 @@
 │   │    ├── xxx                        # 其他业务的数据模块
 │   ├── ui                              # 界面
 │   │    ├── login                      # 登录界面
-│   │    │    ├── LoginViewModel        # 登录的view model，应该包含一个与之对应的UiState
+│   │    │    ├── LoginViewModel        # 登录的view model，应该包含一个与之对应的UiState，使用LiveData
 │   │    │    ├── LoginFragment         # 登录界面容器，有可能是Fragment或者Activity
 │   │    ├── xxx                        # 其他业务的界面
 ├── extras                              # 工程相关的一些资料
@@ -65,6 +65,10 @@ class ExampleRepository(
 }
 
 ```
+
+#### 不要使用LiveData
+https://zhuanlan.zhihu.com/p/491120010
+
 
 ### 多级Repositories
 当业务需求更加复杂时，Repository可能会依赖其它的Repository，这可能是因为所需要的数据来自多个数据源的聚合，或者责任需要封装在另一个存储库中。

@@ -22,7 +22,8 @@ inline fun <reified T> String.toBeanList(): List<T> = Gson().fromJson<List<T>>(t
  *
  * inline内联函数的本质是：把函数体复制粘贴到函数调用处
  *
- * reified: https://juejin.cn/post/6844903833596854279
+ * reified: 使抽象的东西更加具体或真实
+ * https://juejin.cn/post/6844903833596854279
  *
  */
 inline fun <reified T> String.toBean(): T = Gson().fromJson("", T::class.java)
