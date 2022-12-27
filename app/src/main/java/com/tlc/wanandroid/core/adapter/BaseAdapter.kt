@@ -1,48 +1,48 @@
 package com.tlc.wanandroid.core.adapter
 
+import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.tlc.wanandroid.core.BaseModel
+import com.tlc.wanandroid.data.article.model.Article
 
-/**
- * 没有找到合适的统一处理方法
- * 暂时不能用，只能单个用，例如[com.tlc.wanandroid.ui.article.ArticleAdapter]
- *
- * @property mArrData MutableList<BaseModel>
- * @property mArrViewBinding Array<ViewBinding>
- */
-class BaseAdapter(): RecyclerView.Adapter<BaseViewHolder<ViewBinding, BaseModel>>() {
-
-    private val mArrData = mutableListOf<BaseModel>()
-    private var mArrViewBinding = arrayOf<ViewBinding>()
+open class BaseAdapter(
+    protected val context: Context
+): RecyclerView.Adapter<BaseViewHolder<out ViewBinding, out BaseModel>>() {
+    private var mArrViewHolder = arrayOf<Class<BaseViewHolder<out ViewBinding, out BaseModel>>>()
+    protected val mArrData = mutableListOf<BaseModel>()
 
     fun setData(data: List<BaseModel>) {
         mArrData.addAll(data)
     }
 
-    fun setViewBinding(vararg viewBinding: ViewBinding) {
-        mArrViewBinding = viewBinding as Array<ViewBinding>
+    fun setViewHolder(vararg clazz: Class<out BaseViewHolder<out ViewBinding, out BaseModel>>) {
+        mArrViewHolder = clazz as Array<Class<BaseViewHolder<out ViewBinding, out BaseModel>>>
     }
-    
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BaseViewHolder<ViewBinding, BaseModel> {
-        TODO("Not yet implemented")
-        mArrViewBinding[viewType]
-
+    ): BaseViewHolder<out ViewBinding, out BaseModel> {
+        return this.mArrViewHolder[viewType].getConstructor(Context::class.java)
+            .newInstance(context)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<ViewBinding, BaseModel>, position: Int) {
-        TODO("Not yet implemented")
+    override fun onBindViewHolder(holder: BaseViewHolder<out ViewBinding, out BaseModel>, position: Int) {
+        onBindViewHolderInner(holder as BaseViewHolder<ViewBinding, in BaseModel>, position)
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return mArrData.size
     }
 
     override fun getItemViewType(position: Int): Int {
         return super.getItemViewType(position)
+    }
+
+
+    open fun onBindViewHolderInner(holder: BaseViewHolder<ViewBinding, in BaseModel>, position: Int) {
+        holder.bindData(mArrData[position] as Article)
     }
 }

@@ -8,6 +8,7 @@ class ArticleTestDataSource: IArticleDataSource {
         /**
          * 模拟数据
          */
+        Thread.sleep(2000)
         return result;
     }
 }
