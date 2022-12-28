@@ -1,5 +1,7 @@
 package com.tlc.wanandroid.data.article
 
+import com.tlc.wanandroid.core.net.Response
+import com.tlc.wanandroid.core.net.ResponsePage
 import com.tlc.wanandroid.data.article.datasource.IArticleDataSource
 import com.tlc.wanandroid.data.article.model.Article
 import com.tlc.wanandroid.data.article.model.ArticleApiModel
@@ -15,13 +17,32 @@ class ArticleRepository(
      * @param page Int
      * @return List<Article>
      */
-    suspend fun fetchArticleList(page: Int): List<Article> =
+    suspend fun fetchArticleList(page: Int): Response<ResponsePage<Article>> =
         withContext(ioDispatcher) {
-            val origin = articleDataSource.fetchArticleList(page);
-            /**
-             * 转换数据
-             */
-            origin.map { convert(it) }
+            val response = articleDataSource.fetchArticleList(page)
+            if (response.errorCode == 0 && response.data != null) {
+                Response(
+                    data = ResponsePage(
+                        datas = response.data.datas.map { convert(it) },
+                        curPage = response.data.curPage,
+                        offset = response.data.offset,
+                        over = response.data.over,
+                        pageCount = response.data.pageCount,
+                        size = response.data.size,
+                        total = response.data.total,
+                    ),
+                )
+
+            } else {
+                Response(
+                    data = null,
+                    errorCode = response.errorCode,
+                    errorMessage = response.errorMessage,
+                )
+
+            }
+
+
         }
 
     /**

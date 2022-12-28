@@ -13,8 +13,10 @@ open class BaseAdapter(
     private var mArrViewHolder = arrayOf<Class<BaseViewHolder<out ViewBinding, out BaseModel>>>()
     protected val mArrData = mutableListOf<BaseModel>()
 
-    fun setData(data: List<BaseModel>) {
-        mArrData.addAll(data)
+    fun setData(data: List<BaseModel>?) {
+        if (data != null) {
+            mArrData.addAll(data)
+        }
     }
 
     fun setViewHolder(vararg clazz: Class<out BaseViewHolder<out ViewBinding, out BaseModel>>) {

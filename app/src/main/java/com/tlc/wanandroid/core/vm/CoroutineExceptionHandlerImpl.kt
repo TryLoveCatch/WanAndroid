@@ -8,7 +8,7 @@ import javax.security.cert.CertificateException
 import kotlin.coroutines.CoroutineContext
 
 /**
- * 异常处理
+ * 未捕获异常处理
  * 参考：https://blog.fintopia.tech/6119e0152078082a378ec5f4/
  *
  * 把异常处理都统一到这个地方来处理

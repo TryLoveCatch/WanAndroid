@@ -16,12 +16,18 @@ class ArticleViewModel : BaseViewModel() {
         ArticleRepository(Dispatchers.IO, ArticleNetworkDataSource())
     }
 
-    private val _articleListLiveData = MutableLiveData<List<Article>>()
-    val articleListLiveData: LiveData<List<Article>> = _articleListLiveData
+    private val _articleListLiveData = MutableLiveData<ArticleUiState>()
+    val articleListLiveData: LiveData<ArticleUiState> = _articleListLiveData
 
     fun fetchArticleList(page: Int) {
         viewModelScope2.launch {
-            _articleListLiveData.postValue(articleRepository.fetchArticleList(page))
+            var response = articleRepository.fetchArticleList(page)
+            var articleUiState = ArticleUiState(
+                errorMsg = response.errorMessage,
+                articleItems = response.data?.datas,
+                isHasMore = if (response.data == null) false else !response.data!!.over,
+                )
+            _articleListLiveData.postValue(articleUiState)
         }
     }
 }

@@ -9,7 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.tlc.wanandroid.core.adapter.FooterAdapter
 import com.tlc.wanandroid.databinding.FragmentArticleBinding
 import com.tlc.wanandroid.ui.article.vm.ArticleViewModel
@@ -36,10 +35,13 @@ class ArticleFragment : Fragment() {
         page = 0
         viewModel.fetchArticleList(page++)
         viewModel.articleListLiveData.observe(viewLifecycleOwner, Observer {
-            // TODO: 应该根据服务器返回的boolean值来判断，不能通过20这个
-            adapter.setHasMore(it.size >= 20)
-            adapter.setData(it)
-            adapter.notifyDataSetChanged()
+            if (it.errorMsg.isEmpty()) {
+                adapter.setHasMore(it.isHasMore)
+                adapter.setData(it.articleItems)
+                adapter.notifyDataSetChanged()
+            } else {
+
+            }
         })
         viewBinding.recyclerView.adapter = adapter
         viewBinding.recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
