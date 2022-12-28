@@ -54,3 +54,15 @@ inline fun <reified T : Fragment> Fragment.getFragment(
     init(fragment as T?)
     return fragment
 }
+
+inline fun Fragment.setTitle(
+    title: String
+) {
+    activity?.title = title
+}
+
+inline fun Fragment.setTitle(
+    title: Int
+) {
+    activity?.setTitle(title)
+}

@@ -4,16 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tlc.wanandroid.core.BaseFragment
 import com.tlc.wanandroid.core.adapter.FooterAdapter
+import com.tlc.wanandroid.core.utils.setTitle
 import com.tlc.wanandroid.databinding.FragmentArticleBinding
 import com.tlc.wanandroid.ui.article.vm.ArticleViewModel
 
-class ArticleFragment : Fragment() {
+class ArticleFragment : BaseFragment() {
 
     private val viewBinding: FragmentArticleBinding by lazy {
         FragmentArticleBinding.inflate(layoutInflater)
@@ -29,20 +30,20 @@ class ArticleFragment : Fragment() {
         return viewBinding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        adapter.setViewHolder(ArticleItemViewHolder::class.java)
-        page = 0
-        viewModel.fetchArticleList(page++)
+    override fun initData() {
+        setTitle("文章列表")
+        refresh()
         viewModel.articleListLiveData.observe(viewLifecycleOwner, Observer {
+            hideEmptyView()
             if (it.errorMsg.isEmpty()) {
                 adapter.setHasMore(it.isHasMore)
                 adapter.setData(it.articleItems)
                 adapter.notifyDataSetChanged()
             } else {
-
+                showError(it.errorMsg)
             }
         })
+        adapter.setViewHolder(ArticleItemViewHolder::class.java)
         viewBinding.recyclerView.adapter = adapter
         viewBinding.recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -56,15 +57,29 @@ class ArticleFragment : Fragment() {
                     -1
                 }
 
-                val itemCount: Int = adapter.getItemCount()
+                val itemCount: Int = adapter.itemCount
                 if (lastVisibleItem >= itemCount - 1 && itemCount > 0 && lastVisibleItem != -1) {
                     loadMore()
                 }
             }
         })
+
+        mEmptyView?.setOnRefreshListener {
+            refresh()
+        }
+    }
+
+    override fun initEmptyView() {
+        mEmptyView = viewBinding.emptyView
     }
 
     private fun loadMore() {
+        viewModel.fetchArticleList(page++)
+    }
+
+    private fun refresh() {
+        showLoading()
+        page = 0
         viewModel.fetchArticleList(page++)
     }
 

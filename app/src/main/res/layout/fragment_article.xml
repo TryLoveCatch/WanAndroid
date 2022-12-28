@@ -19,4 +19,10 @@
         tools:itemCount="10"
         tools:listitem="@layout/item_article" />
 
+    <com.tlc.wanandroid.core.views.EmptyView
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
