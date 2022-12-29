@@ -2,11 +2,10 @@ package com.tlc.wanandroid.ui.article.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.JsonParseException
 import com.tlc.wanandroid.core.vm.BaseViewModel
 import com.tlc.wanandroid.data.article.ArticleRepository
 import com.tlc.wanandroid.data.article.datasource.ArticleNetworkDataSource
-import com.tlc.wanandroid.data.article.model.Article
+import com.tlc.wanandroid.data.article.datasource.ArticleTestDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -22,8 +21,15 @@ class ArticleViewModel : BaseViewModel() {
     fun fetchArticleList(page: Int) {
         viewModelScope2.launch {
             var response = articleRepository.fetchArticleList(page)
+            var errorMessage: String = response.errorMessage
+            if (errorMessage.isNullOrEmpty()) {
+                if (response.data == null || response.data?.datas.isNullOrEmpty()) {
+                    errorMessage = "暂无数据"
+                }
+            }
+
             var articleUiState = ArticleUiState(
-                errorMsg = response.errorMessage,
+                errorMsg = errorMessage,
                 articleItems = response.data?.datas,
                 isHasMore = if (response.data == null) false else !response.data!!.over,
                 )

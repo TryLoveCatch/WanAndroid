@@ -10,7 +10,11 @@ class ArticleTestDataSource: IArticleDataSource {
         /**
          * 模拟异常
          */
-
+//        var response = Response<ResponsePage<ArticleApiModel>>(
+//            errorCode = 10,
+//            errorMessage = "老板跑路了，后台服务崩了",
+//            data = null,
+//        )
 
 
         /**
@@ -32,7 +36,7 @@ class ArticleTestDataSource: IArticleDataSource {
             data = responsePage,
         )
 
-        Thread.sleep(2000)
+        Thread.sleep(5000)
         return response
     }
 }
