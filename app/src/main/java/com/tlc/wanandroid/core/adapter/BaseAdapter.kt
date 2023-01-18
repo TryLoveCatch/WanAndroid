@@ -45,6 +45,6 @@ open class BaseAdapter(
 
 
     open fun onBindViewHolderInner(holder: BaseViewHolder<ViewBinding, in BaseModel>, position: Int) {
-        holder.bindData(mArrData[position] as Article)
+        holder.bindData(mArrData[position])
     }
 }
