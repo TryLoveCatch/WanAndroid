@@ -30,14 +30,21 @@ val mainHandler by lazy {
     Handler(Looper.getMainLooper())
 }
 
-
-fun runOnUi(block: () -> Unit) {
-    if (Looper.getMainLooper() == Looper.myLooper()) {
-        block()
-    } else {
-        mainHandler.post(block)
+/**
+ * toast(String)和String.toast()
+ * 都打开，会报方法签名冲突
+ * 因为String.toast()反编译之后，也是生成了一个toast(String)的方法，所以冲突了
+ */
+fun Any.toast() {
+    val message = when (this) {
+        this is Byte, this is Int, this is Long, this is Float, this is Double, this is Boolean -> this.toString()
+        else -> this.toJson()
+    }
+    runOnUi {
+        Toast.makeText(MyApplication.instance, message, Toast.LENGTH_SHORT).show()
     }
 }
+
 
 //fun toast(m: String) {
 //    runOnUi {
@@ -45,13 +52,11 @@ fun runOnUi(block: () -> Unit) {
 //    }
 //}
 
-/**
- * toast(String)和String.toast()
- * 都打开，会报方法签名冲突
- * 因为String.toast()反编译之后，也是生成了一个toast(String)的方法，所以冲突了
- */
-fun String.toast() {
-    runOnUi {
-        Toast.makeText(MyApplication.instance, this, Toast.LENGTH_SHORT).show()
+
+private fun runOnUi(block: () -> Unit) {
+    if (Looper.getMainLooper() == Looper.myLooper()) {
+        block()
+    } else {
+        mainHandler.post(block)
     }
 }
