@@ -4,7 +4,7 @@ import com.tlc.wanandroid.core.net.Response
 import com.tlc.wanandroid.core.net.ResponsePage
 import com.tlc.wanandroid.data.article.model.ArticleApiModel
 
-class ArticleTestDataSource: IArticleDataSource {
+class ArticleMockDataSource: IArticleDataSource {
     override suspend fun fetchArticleList(page: Int): Response<ResponsePage<ArticleApiModel>> {
 
         /**
