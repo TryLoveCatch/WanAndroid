@@ -1,8 +1,7 @@
-package com.tlc.wanandroid.ui.article
+package com.tlc.wanandroid.ui.home
 
 import android.content.Context
 import android.view.LayoutInflater
-import com.tlc.wanandroid.core.BaseModel
 import com.tlc.wanandroid.core.adapter.BaseViewHolder
 import com.tlc.wanandroid.data.article.model.Article
 import com.tlc.wanandroid.databinding.ItemArticleBinding

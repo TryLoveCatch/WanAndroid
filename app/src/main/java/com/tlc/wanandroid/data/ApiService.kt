@@ -4,6 +4,7 @@ import com.tlc.wanandroid.core.net.Response
 import com.tlc.wanandroid.core.net.ResponsePage
 import com.tlc.wanandroid.core.net.Retrofit
 import com.tlc.wanandroid.data.article.model.ArticleApiModel
+import com.tlc.wanandroid.data.banner.model.BannerApiModel
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -23,6 +24,9 @@ interface ApiService {
      */
     @GET("article/list/{page}/json")
     suspend fun fetchArticleList(@Path("page") page: Int): Response<ResponsePage<ArticleApiModel>>
+
+    @GET("banner/json")
+    suspend fun fetchBanner(): Response<List<BannerApiModel>>
 
 }
 

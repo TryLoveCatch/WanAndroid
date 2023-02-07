@@ -3,8 +3,7 @@ package com.tlc.wanandroid
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.tlc.wanandroid.core.utils.showFragment
-import com.tlc.wanandroid.ui.article.ArticleFragment
-import com.tlc.wanandroid.ui.main.MainFragment
+import com.tlc.wanandroid.ui.home.HomeFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,6 +16,6 @@ class MainActivity : AppCompatActivity() {
 //                .commitNow()
 //        }
 
-        showFragment<ArticleFragment>(R.id.container)
+        showFragment<HomeFragment>(R.id.container)
     }
 }

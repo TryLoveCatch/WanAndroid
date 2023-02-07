@@ -1,4 +1,4 @@
-package com.tlc.wanandroid.ui.article
+package com.tlc.wanandroid.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,15 +12,15 @@ import com.tlc.wanandroid.core.BaseFragment
 import com.tlc.wanandroid.core.adapter.FooterAdapter
 import com.tlc.wanandroid.core.utils.setTitle
 import com.tlc.wanandroid.databinding.FragmentArticleBinding
-import com.tlc.wanandroid.ui.article.vm.ArticleViewModel
+import com.tlc.wanandroid.ui.home.vm.HomeViewModel
 
-class ArticleFragment : BaseFragment() {
+class HomeFragment : BaseFragment() {
 
     private val viewBinding: FragmentArticleBinding by lazy {
         FragmentArticleBinding.inflate(layoutInflater)
     }
-    private val viewModel: ArticleViewModel by activityViewModels()
-    private val adapter by lazy { FooterAdapter(requireContext()) }
+    private val viewModel: HomeViewModel by activityViewModels()
+    private val adapter by lazy { HomeAdapter(requireContext()) }
     private var page = 0
 
     override fun onCreateView(
@@ -33,17 +33,19 @@ class ArticleFragment : BaseFragment() {
     override fun initData() {
         setTitle("文章列表")
         refresh()
-        viewModel.articleListLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.homeListLiveData.observe(viewLifecycleOwner, Observer {
             hideEmptyView()
             if (it.errorMsg.isEmpty()) {
                 adapter.setHasMore(it.isHasMore)
-                adapter.setData(it.articleItems)
+                adapter.setData(it.items)
                 adapter.notifyDataSetChanged()
             } else {
                 showError(it.errorMsg)
             }
         })
-        adapter.setViewHolder(ArticleItemViewHolder::class.java)
+        adapter.setViewHolder(
+            BannerViewHolder::class.java,
+            ArticleItemViewHolder::class.java)
         viewBinding.recyclerView.adapter = adapter
         viewBinding.recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -74,13 +76,13 @@ class ArticleFragment : BaseFragment() {
     }
 
     private fun loadMore() {
-        viewModel.fetchArticleList(page++)
+        viewModel.fetchHome(page++)
     }
 
     private fun refresh() {
         showLoading()
         page = 0
-        viewModel.fetchArticleList(page++)
+        viewModel.fetchHome(page++)
     }
 
 }

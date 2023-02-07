@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.tlc.wanandroid.core.BaseModel
 
-class FooterAdapter(context: Context): BaseAdapter(context) {
+open class FooterAdapter(context: Context): BaseAdapter(context) {
     private var isHasMore = false;
 
     companion object {
