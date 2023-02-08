@@ -2,13 +2,16 @@ package com.tlc.wanandroid.ui.home.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.tlc.wanandroid.core.utils.loge
 import com.tlc.wanandroid.core.vm.BaseViewModel
 import com.tlc.wanandroid.data.article.ArticleRepository
 import com.tlc.wanandroid.data.article.datasource.ArticleRemoteDataSource
 import com.tlc.wanandroid.data.banner.BannerRepository
+import com.tlc.wanandroid.data.banner.datasource.BannerMockErrorSource
 import com.tlc.wanandroid.data.banner.datasource.BannerRemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 class HomeViewModel : BaseViewModel() {
     private val articleRepository by lazy {
@@ -17,7 +20,8 @@ class HomeViewModel : BaseViewModel() {
     }
 
     private val bannerRepository by lazy {
-        BannerRepository(Dispatchers.IO, BannerRemoteDataSource())
+        BannerRepository(Dispatchers.IO, BannerMockErrorSource())
+//        BannerRepository(Dispatchers.IO, BannerRemoteDataSource())
     }
 
     private val _homeListLiveData = MutableLiveData<HomeUiState>()
@@ -53,19 +57,40 @@ class HomeViewModel : BaseViewModel() {
                 _homeListLiveData.postValue(homeUiState)
                 return@launch
             }
-            var bannerResponse = bannerRepository.fetchBanner()
-            var bannerErrorMessage: String = bannerResponse.errorMessage
-            if (bannerErrorMessage.isNullOrEmpty()) {
-                var bannerList = BannerList(
-                    data = bannerResponse.data
-                )
-                bannerList.let {
-                    homeUiState.items.add(0, it)
+            /**
+             * 自己捕获异常处理
+             */
+            try {
+                var bannerResponse = bannerRepository.fetchBanner()
+                var bannerErrorMessage: String = bannerResponse.errorMessage
+                if (bannerErrorMessage.isNullOrEmpty()) {
+                    var bannerList = BannerList(
+                        data = bannerResponse.data
+                    )
+                    bannerList.let {
+                        homeUiState.items.add(0, it)
+                    }
                 }
-            }
 
+
+            } catch (e: Exception) {
+                e.loge("HomeViewModel")
+            }
             _homeListLiveData.postValue(homeUiState)
 
         }
+    }
+
+    override fun onException(context: CoroutineContext, exception: Throwable) {
+        context.toString().loge("HomeViewModel")
+        exception.loge("HomeViewModel")
+        /**
+         * 未捕获异常处理
+         */
+        var homeUiState = HomeUiState(
+            errorMsg = "未捕获异常",
+            isHasMore = false,
+        )
+        _homeListLiveData.postValue(homeUiState)
     }
 }

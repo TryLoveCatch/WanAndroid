@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.tlc.wanandroid.core.BaseModel
-import com.tlc.wanandroid.data.article.model.Article
 
 open class BaseAdapter(
     protected val context: Context
@@ -46,5 +45,9 @@ open class BaseAdapter(
 
     open fun onBindViewHolderInner(holder: BaseViewHolder<ViewBinding, in BaseModel>, position: Int) {
         holder.bindData(mArrData[position])
+    }
+
+    open fun getItem(pPosition: Int): BaseModel? {
+        return if (mArrData != null && mArrData.size > 0) mArrData[pPosition] else null
     }
 }

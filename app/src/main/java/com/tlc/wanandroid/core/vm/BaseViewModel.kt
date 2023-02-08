@@ -11,7 +11,10 @@ import kotlinx.coroutines.plus
  *
  * @property viewModelScope2 CoroutineScope
  */
-public abstract class BaseViewModel: ViewModel() {
+public abstract class BaseViewModel: ViewModel(), IExceptionListener {
 
-    public val viewModelScope2 = viewModelScope + CoroutineExceptionHandlerImpl()
+    public val viewModelScope2 by lazy {
+        viewModelScope + CoroutineExceptionHandlerImpl(this)
+    }
+
 }
