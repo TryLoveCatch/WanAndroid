@@ -8,7 +8,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 
-
+/**
+ * object
+ * 对象声明，可以直接用来实现单例模式
+ * 在实际的业务场景是有一定限制的：对于需要携带参数的单例类，object 就有点力不从心了。
+ */
 object Retrofit {
     private const val TIME_OUT = 5
     private val mMapService by lazy {
