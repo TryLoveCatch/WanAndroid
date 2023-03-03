@@ -1,0 +1,40 @@
+apply plugin: "maven-publish"
+
+def GroupId = 'com.baic.gradle.plugin'
+def ArtifactId = 'test-asm'
+def Version = '1.0.0'
+
+afterEvaluate {// components.release 只有在配置完成之后，才能拿到值
+    publishing {
+        // 配置maven 仓库
+        repositories {
+//        handler.mavenLocal()  // 发布到默认的 本地maven 仓库 ，路径： USER_HOME/.m2/repository/
+            maven {
+                url "${rootDir}/repo"
+            }
+        }
+
+        // 配置发布产物
+        publications {
+            // 名称可以随便定义，这里取名maven
+            // 发布正式包
+            maven(MavenPublication) {
+                groupId = GroupId
+                artifactId = ArtifactId
+                version = Version
+
+                //如果是war包填写components.web，如果是jar包填写components.java
+                from components.java
+                //配置上传源码
+                artifact sourceJar
+            }
+        }
+    }
+}
+
+
+//打包源码
+task sourceJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
