@@ -1,4 +1,7 @@
 # 自定义plugin
+参考：https://blog.csdn.net/guiying712/article/details/104702731
+https://www.jianshu.com/p/3ec8e9574aaf
+
 ## 新建一个CustomPlugin
 ```kotlin
 import org.gradle.api.Plugin
@@ -99,6 +102,51 @@ plugins {
 到此已经配置完成了，我们同步一下gradle，可以在Build里面看到我们的打印：
 ![](../extras/3.png)
 
+
+
+# 自定义Transform
+参考；https://juejin.cn/post/7098752199575994405
+
+
+Transform API 是 Android Gradle Plugin 1.5 就引入的特性，主要用于在 Android 构建过程中， 在 Class→Dex 这个节点修改 Class 字节码。
+利用 Transform API，我们可以拿到所有参与构建的 Class 文件，借助 Javassist 或 ASM 等字节码编辑工具进行修改，插入自定义逻辑。
+一般来说，这些自定义逻辑是与业务逻辑无关的。
+
+使用 Transform 的常见的应用场景有：
+
+- 埋点统计： 在页面展现和退出等生命周期中插入埋点统计代码，以统计页面展现数据；
+- 耗时监控： 在指定方法的前后插入耗时计算，以观察方法执行时间；
+- 方法替换： 将方法调用替换为调用另一个方法。
+
+
+## BaseCustomTransform
+Transform 的核心代码在 transform() 方法中，我们要做的就是遍历输入文件，再把修改后的文件复制到目标路径中，对于 JarInputs 还有一次解压和压缩。更进一步，再考虑增量编译的情况。
+因此，整个 Transform 的核心过程是有固定套路，模板流程图如下：
+![](../extras/4.png)
+
+
+我们把整个流程图做成一个抽象模板类，子类需要重写 provideFunction() 方法，从输入流读取 Class 文件，修改完字节码后再写入到输出流。
+甚至不需要考虑 Transform 的输入文件遍历、加解压、增量等。
+
+## 测试
+运行App程序，可以在Build里面看到咱们自定义Transform代码里面的打印：
+![](../extras/5.png)
+
+
+咱们看这个任务名字，`:app:transformClassesWithCustomTransformForDebug`，跟咱们在CustomTransform里面设置的名字一样，规则也是一致的：
+```
+transform[InputTypes]With[name]For[Configuration]
+```
+
+InputTypes也对应的是getInputTypes()里面的设置，一般来说就是两个：
+- CLASSES
+- RESOURCES
+
+# ASM
+
+
+
+
 # 问题
 
 ## "Could not find com.android.tools.build:gradle:7.2.0
@@ -118,9 +166,6 @@ dependencyResolutionManagement {
     }
 }
 ```
-
-
-
 
 ## publish之后，出现了两个库
 
