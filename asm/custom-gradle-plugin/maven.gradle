@@ -1,6 +1,6 @@
 apply plugin: "maven-publish"
 
-def GroupId = 'com.baic.gradle.plugin'
+def GroupId = 'com.baic.icc.gradle.plugin'
 def ArtifactId = 'test-asm'
 def Version = '1.0.0'
 
