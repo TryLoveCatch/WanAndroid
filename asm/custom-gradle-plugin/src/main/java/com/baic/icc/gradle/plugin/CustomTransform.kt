@@ -3,13 +3,18 @@ package com.baic.icc.gradle.plugin
 import com.android.build.api.transform.QualifiedContent
 import com.android.build.api.variant.VariantInfo
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.baic.icc.gradle.plugin.annotation.AnnotationClassVisitor
+import com.baic.icc.gradle.plugin.base.BaseTransform
 import org.gradle.api.Incubating
 import org.gradle.api.Project
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.ClassWriter
+import org.objectweb.asm.Opcodes
 import java.io.InputStream
 import java.io.OutputStream
 
-class CustomTransform(val project: Project): BaseCustomTransform(true) {
-
+class CustomTransform(val project: Project): BaseTransform(true) {
 
     // 指定 Transform 的名称，该名称还会用于组成 Task 的名称
     // 格式为 transform[InputTypes]With[name]For[Configuration]
@@ -43,8 +48,11 @@ class CustomTransform(val project: Project): BaseCustomTransform(true) {
 //        }
 //    }
     override fun provideFunction() = { ios: InputStream, os: OutputStream ->
-        ios.copyTo(os)
-        log("provideFunction")
+        val classReader = ClassReader(ios)
+        val classWriter = ClassWriter(ClassWriter.COMPUTE_MAXS)
+        val classVisitor: ClassVisitor = AnnotationClassVisitor(Opcodes.ASM7, classWriter)
+        classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES)
+        os.write(classWriter.toByteArray())
     }
 
 

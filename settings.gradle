@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "WanAndroid"
 include ':app'
 include ':asm:custom-gradle-plugin'
+include ':asm:custom-annotation'

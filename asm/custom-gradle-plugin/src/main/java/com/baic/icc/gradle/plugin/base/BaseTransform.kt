@@ -1,4 +1,4 @@
-package com.baic.icc.gradle.plugin
+package com.baic.icc.gradle.plugin.base
 
 import com.android.SdkConstants
 import com.android.build.api.transform.Format
@@ -13,7 +13,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-abstract class BaseCustomTransform(private val debug: Boolean) : Transform() {
+abstract class BaseTransform(private val debug: Boolean) : Transform() {
 
     abstract fun provideFunction(): ((InputStream, OutputStream) -> Unit)?
 

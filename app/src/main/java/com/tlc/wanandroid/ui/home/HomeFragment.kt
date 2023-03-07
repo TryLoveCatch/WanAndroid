@@ -8,12 +8,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.baic.icc.annotation.TestAsm
 import com.tlc.wanandroid.core.BaseFragment
-import com.tlc.wanandroid.core.adapter.FooterAdapter
 import com.tlc.wanandroid.core.utils.setTitle
 import com.tlc.wanandroid.databinding.FragmentArticleBinding
 import com.tlc.wanandroid.ui.home.vm.HomeViewModel
 
+@TestAsm
 class HomeFragment : BaseFragment() {
 
     private val viewBinding: FragmentArticleBinding by lazy {
