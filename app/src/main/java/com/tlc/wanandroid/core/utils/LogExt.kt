@@ -4,6 +4,7 @@ import android.util.Log
 import com.tlc.wanandroid.BuildConfig
 
 private const val defaultLogTag: String = BuildConfig.APPLICATION_ID
+private const val versionName: String = BuildConfig.VERSION_NAME
 
 private enum class LogLevel {
     Verbose, Debug, Info, Warn, Error
@@ -59,11 +60,12 @@ fun Throwable.loge(tag: String = defaultLogTag) {
 }
 
 private fun intervalLog(level: LogLevel, tag: String, msg: Any) {
-    val message = when (msg) {
+    val tmp = when (msg) {
         msg is Byte, msg is Int, msg is Long, msg is Float, msg is Double, msg is Boolean -> msg.toString()
         else -> msg.toJson()
     }
 
+    val message = "[$versionName]$tmp"
 
     if (BuildConfig.DEBUG) {
         when (level) {
