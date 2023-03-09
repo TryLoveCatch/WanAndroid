@@ -20,8 +20,8 @@ class HomeViewModel : BaseViewModel() {
     }
 
     private val bannerRepository by lazy {
-        BannerRepository(Dispatchers.IO, BannerMockErrorSource())
-//        BannerRepository(Dispatchers.IO, BannerRemoteDataSource())
+//        BannerRepository(Dispatchers.IO, BannerMockErrorSource())
+        BannerRepository(Dispatchers.IO, BannerRemoteDataSource())
     }
 
     private val _homeListLiveData = MutableLiveData<HomeUiState>()
