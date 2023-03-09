@@ -6,6 +6,7 @@ import com.android.build.gradle.internal.pipeline.TransformManager
 import com.baic.icc.gradle.plugin.annotation.AnnotationClassVisitor
 import com.baic.icc.gradle.plugin.base.BaseTransform
 import com.baic.icc.gradle.plugin.bitmap.BitmapLegalClassVisitor
+import com.baic.icc.gradle.plugin.bitmap.GlideClassVisitor
 import org.gradle.api.Incubating
 import org.gradle.api.Project
 import org.objectweb.asm.ClassReader
@@ -52,7 +53,8 @@ class CustomTransform(val project: Project): BaseTransform(true) {
         val classReader = ClassReader(ios)
         val classWriter = ClassWriter(ClassWriter.COMPUTE_MAXS)
 //        val classVisitor: ClassVisitor = AnnotationClassVisitor(Opcodes.ASM7, classWriter)
-        val classVisitor: ClassVisitor = BitmapLegalClassVisitor(Opcodes.ASM7, classWriter)
+//        val classVisitor: ClassVisitor = BitmapLegalClassVisitor(Opcodes.ASM7, classWriter)
+        val classVisitor: ClassVisitor = GlideClassVisitor(Opcodes.ASM7, classWriter)
         classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES)
         os.write(classWriter.toByteArray())
     }
