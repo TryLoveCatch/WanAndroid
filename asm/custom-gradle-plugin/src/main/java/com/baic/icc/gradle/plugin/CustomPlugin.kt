@@ -15,8 +15,18 @@ class CustomPlugin: Plugin<Project> {
         println("########################################################################")
         println()
 
+
         /**
-         * 参考：https://henleylee.github.io/posts/2018/9986453e.html
+         * https://segmentfault.com/a/1190000041856822
+         * 插件扩展机制
+         * Extension 扩展是插件为外部构建脚本提供的配置项，用于支持外部自定义插件的工作方式，
+         * 其实就是一个对外开放的 Java Bean 或 Groovy Bean。
+         * 例如，我们熟悉的 android{} 就是 Android Gradle Plugin 提供的扩展。
+         */
+        // applyExtension(project)
+
+        /**
+        * 参考：https://henleylee.github.io/posts/2018/9986453e.html
          *
          * AppExtension 用于构建 Android app module 的 com.android.application 插件扩展。
          * LibraryExtension 用于构建 Android library module 的 com.android.library 插件扩展。
@@ -28,4 +38,10 @@ class CustomPlugin: Plugin<Project> {
         // 注册 Transform，支持额外增加依赖
         androidExtension.registerTransform(CustomTransform(project))
     }
+
+//    private fun applyExtension(project: Project) {
+//        // 创建扩展，并添加到 ExtensionContainer 容器
+//        project.extensions.create()
+//    }
+
 }
