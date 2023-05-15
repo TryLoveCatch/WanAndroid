@@ -2,6 +2,7 @@ package com.tlc.wanandroid.core.utils
 
 import android.util.Log
 import com.tlc.wanandroid.BuildConfig
+import java.util.*
 
 private const val defaultLogTag: String = BuildConfig.APPLICATION_ID
 private const val versionName: String = BuildConfig.VERSION_NAME
@@ -56,7 +57,11 @@ fun Any.loge(tag: String = defaultLogTag) {
 }
 
 fun Throwable.loge(tag: String = defaultLogTag) {
-    Log.e(tag, this.message, this)
+    intervalLog(
+        LogLevel.Error,
+        tag,
+        this.message!!
+    )
 }
 
 private fun intervalLog(level: LogLevel, tag: String, msg: Any) {
@@ -65,7 +70,21 @@ private fun intervalLog(level: LogLevel, tag: String, msg: Any) {
         else -> msg.toJson()
     }
 
-    val message = "[$versionName]$tmp"
+    val trace = Throwable().fillInStackTrace().stackTrace
+
+    var caller = "<unknown>"
+    for (i in 2 until trace.size) {
+        var callingClass = trace[i].className
+        if (!callingClass.contains("LogExt")) {
+            callingClass = callingClass.substring(callingClass.lastIndexOf('.') + 1)
+            caller = callingClass + "." + trace[i].methodName
+            break
+        }
+    }
+    val message = String.format(
+            Locale.US, "[%s][%s]%s() -> %s",
+        versionName, Thread.currentThread().name, caller, tmp
+        )
 
     if (BuildConfig.DEBUG) {
         when (level) {
