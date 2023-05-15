@@ -21,18 +21,15 @@ import kotlin.coroutines.CoroutineContext
  *
  * 这个类的使用，需要在ViewModel里面，对viewModelScope进行拦截异常，参见[BaseViewModel]
  *
- * 也可以增加一个listener，遇到未处理异常的时候，就抛给上层业务自己处理
- *
  *
  * @property key Key<*>
  */
-class CoroutineExceptionHandlerImpl(private val listener: IExceptionListener): CoroutineExceptionHandler {
+class CoroutineExceptionHandlerImpl(): CoroutineExceptionHandler {
     override val key: CoroutineContext.Key<*>
         get() = CoroutineExceptionHandler
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
         exception.loge("CoroutineExceptionHandlerImpl")
-        listener?.onException(context, exception)
         when (exception) {
 //            is ApiErrorException -> {
 //                //处理业务错误
